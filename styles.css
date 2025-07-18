@@ -38,3 +38,20 @@ button:disabled {
     background: #b0c4de;
     cursor: not-allowed;
 }
+#linkBotContainer {
+    margin: 20px 0;
+}
+#linkPreview {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+    min-height: 40px;
+    text-align: left;
+    transition: box-shadow 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+#linkPreview img {
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
