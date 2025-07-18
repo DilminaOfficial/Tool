@@ -30,7 +30,7 @@ removeBgBtn.addEventListener('click', async function () {
     const formData = new FormData();
     formData.append('image_file', uploadedFile);
     // For remove.bg API, you can specify bg_color or use default. Here, we assume blue background removal.
-    formData.append('bg_color', 'blue');
+    formData.append('bg_color', 'white'); // Set background to white instead of blue
 
     try {
         const response = await fetch('https://api.remove.bg/v1.0/removebg', {
@@ -45,8 +45,20 @@ removeBgBtn.addEventListener('click', async function () {
         }
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
-        resultImg.src = url;
-        resultImg.style.display = 'block';
+        // Draw result on white background if PNG is transparent
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+            resultImg.src = canvas.toDataURL('image/png');
+            resultImg.style.display = 'block';
+        };
+        img.src = url;
     } catch (err) {
         alert('Failed to remove background: ' + err.message);
     } finally {
