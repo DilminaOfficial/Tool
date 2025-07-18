@@ -2,6 +2,8 @@ const imageInput = document.getElementById('imageInput');
 const preview = document.getElementById('preview');
 const removeBgBtn = document.getElementById('removeBgBtn');
 const resultImg = document.getElementById('resultImg');
+const linkInput = document.getElementById('linkInput');
+const linkPreview = document.getElementById('linkPreview');
 
 let uploadedFile = null;
 
@@ -52,5 +54,53 @@ removeBgBtn.addEventListener('click', async function () {
     } finally {
         removeBgBtn.disabled = false;
         removeBgBtn.textContent = 'Remove Blue Background';
+    }
+});
+
+function isValidUrl(url) {
+    try {
+        new URL(url);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+async function fetchLinkPreview(url) {
+    // Use a public Open Graph API proxy (for demo purposes)
+    // In production, use your own backend to avoid CORS issues
+    const apiUrl = `https://jsonlink.io/api/extract?url=${encodeURIComponent(url)}`;
+    try {
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error('Failed to fetch link preview');
+        return await res.json();
+    } catch (e) {
+        return null;
+    }
+}
+
+linkInput.addEventListener('input', async function () {
+    const url = linkInput.value.trim();
+    if (isValidUrl(url)) {
+        linkPreview.style.display = 'block';
+        linkPreview.textContent = 'Loading preview...';
+        const data = await fetchLinkPreview(url);
+        if (data && (data.title || data.description || data.images?.length)) {
+            linkPreview.innerHTML = `
+                <div style="display:flex;align-items:center;gap:10px;">
+                    ${data.images && data.images.length ? `<img src="${data.images[0]}" alt="Preview" style="width:60px;height:60px;object-fit:cover;border-radius:6px;">` : ''}
+                    <div style="text-align:left;">
+                        <div style="font-weight:bold;">${data.title || ''}</div>
+                        <div style="font-size:13px;color:#555;">${data.description || ''}</div>
+                        <a href="${url}" target="_blank" style="font-size:12px;color:#007bff;">${url}</a>
+                    </div>
+                </div>
+            `;
+        } else {
+            linkPreview.textContent = 'No preview available.';
+        }
+    } else {
+        linkPreview.style.display = 'none';
+        linkPreview.textContent = '';
     }
 });
