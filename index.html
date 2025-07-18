@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue Background Remover</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Blue Background Remover</h1>
+        <input type="file" id="imageInput" accept="image/*">
+        <div id="previewContainer">
+            <img id="preview" src="#" alt="Image Preview" style="display:none;"/>
+        </div>
+        <button id="removeBgBtn" disabled>Remove Blue Background</button>
+        <div id="resultContainer">
+            <h2>Result</h2>
+            <img id="resultImg" src="#" alt="Result Image" style="display:none;"/>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
